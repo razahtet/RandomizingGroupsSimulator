@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Randomizing Groups Simulator</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- import the webpage's javascript file -->
+    <script src="/script.js" defer></script>
+</head>
+
+<body>
+    <h1 style="color: crimson">Randomizing Groups Simulator (By Raza/Htet)</h1>
+    <h3 style="color: purple">
+        - Press the "Submit Groups' Number" button to randomize groups
+    </h3>
+    <h3 style="color: purple">
+        - Press the check box right of "Separate!" to enable separating two people being in one group
+    </h3>
+    <h3 style="color: goldenrod">
+        - Update!: Hilight over the name or the group in the boxes to and click them to remove the name or group.
+        <br><br>- Update!: You can now separate certain people so that you cannot put certain people together in one group.
+    </h3>
+    <h2 style="color: green">Put in Names: <input id="nameInput" type="text" /><button id="submitB">Submit Name</button></h2>
+    <h2 style="color: brown">Groups #: <input id="groupInput" min="1" type="number" /><button id="gSubmit">Submit Groups' Number</button></h2>
+    <div>
+      <button id="addPutButton">
+          Add Another Separation
+    </button>  
+      <button id="checkAllInputs">
+        Check All Separations
+      </button>
+  </div>
+  
+    <h2 id="puttingDiv">
+        <div class = "dropE" id="dPutdiv"> Don't Put <select class = "selectS" disabled="true" id="dropFirst"></select> with <select class = "selectS" disabled="true" id="dropSecond"></select> Please.
+            <div id="sepDiv">
+            Separate! <input id="pSubmit" type="checkbox" />
+            </div>
+        </div>
+        
+    </h2>
+    <div>
+        <h2 id="nh" style="color: orange">
+            Names: 0
+        </h2>
+        <h2 id="gh" style="pink">
+            Groups: 0
+        </h2>
+    </div>
+    <div style="display: inline-block">
+        <div id="nameDiv">
+
+        </div>
+        <div id="outputDiv">
+
+        </div>
+    </div>
+    <button id="clearB">
+        Clear
+    </button>
+</body>
+
+</html>
