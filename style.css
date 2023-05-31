@@ -1,0 +1,137 @@
+.nameC {
+  display: block;
+  color: green;
+}
+
+.nameC:hover {
+  color: red;
+  cursor: pointer;
+}
+
+#nameDiv,
+#outputDiv {
+  border: 10px ridge black;
+  height: 400px;
+  width: 500px;
+  display: inline-block;
+  vertical-align: top;
+  overflow: auto;
+}
+
+#nh,
+#gh {
+  display: inline-block;
+  vertical-align: top;
+}
+
+#nameDiv {
+  background-color: lightpink;
+}
+
+#gh {
+  margin-left: 32.5%;
+  color: Dodgerblue;
+}
+
+#nh {
+  margin-left: 14%;
+}
+
+.smallO {
+  color: skyblue;
+  display: inline-block;
+}
+
+.smallO:hover {
+  color: crimson;
+  cursor: pointer;
+}
+
+.pepNames {
+  display: inline-block;
+  color: white;
+}
+
+.noPeople {
+  display: inline-block;
+  font-weight: bold;
+  color: rgb(204, 0, 0);
+}
+
+#outputDiv {
+  background-color: green;
+  display: inline-block;
+}
+
+body {
+  background-color: lightblue;
+  font-family: monospace;
+}
+
+button {
+  background-color: black;
+  color: white;
+  border-radius: 150px;
+  border: 10px ridge white;
+  font-family: monospace;
+  cursor: pointer;
+}
+
+button:hover {
+  color: blue;
+  background-color: lightgreen;
+  border: 10px ridge skyblue;
+}
+
+#nameInput {
+  color: yellow;
+  background-color: blue;
+  border-radius: 150px;
+  border: 10px ridge yellow;
+  font-family: monospace;
+}
+
+#groupInput {
+  color: blue;
+  background-color: yellow;
+  border-radius: 150px;
+  border: 10px ridge blue;
+  font-family: monospace;
+}
+
+#clearB {
+  position: absolute;
+  top: 430px;
+  left: 1100px;
+  display: inline-block;
+}
+
+#sepDiv,
+#dropFirst,
+#dropSecond,
+#dPutdiv,
+#sidePanel,
+.selectS,
+.inputDV {
+  display: inline-block;
+}
+
+#dPutdiv,
+.dropE {
+  color: chocolate;
+  margin-top: 10px;
+}
+
+#sepDiv {
+  color: crimson;
+  margin-left: 20px;
+}
+
+.inputDV {
+  color: crimson;
+  margin-left: 30px;
+}
+
+.checkS, .selectS {
+  cursor: pointer;
+}
