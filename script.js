@@ -141,7 +141,6 @@ function clearE() {
 }
 
 function makeGroups() {
-  console.log(aNA, "aNA make groups");
   shuffle();
   groupObject = {};
   let cN = 0;
