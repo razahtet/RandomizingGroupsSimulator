@@ -135,3 +135,11 @@ button:hover {
 .checkS, .selectS {
   cursor: pointer;
 }
+
+#errorDiv {
+  display: inline-block;
+}
+
+#errorMessage {
+  color: crimson;
+}

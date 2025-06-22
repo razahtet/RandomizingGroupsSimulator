@@ -1,26 +1,27 @@
-var nameInput = document.getElementById("nameInput");
-var groupInput = document.getElementById("groupInput");
-var outputDiv = document.getElementById("outputDiv");
-var nameDiv = document.getElementById("nameDiv");
-var submitB = document.getElementById("submitB");
-var gSubmit = document.getElementById("gSubmit");
-var addPutButton = document.getElementById("addPutButton");
-var clearB = document.getElementById("clearB");
-var nh = document.getElementById("nh");
-var aNA = [];
-var numGr = 0;
-var groupObject = {};
-var dropFirst = document.getElementById("dropFirst");
-var dropSecond = document.getElementById("dropSecond");
-var pSubmit = document.getElementById("pSubmit");
-var gh = document.getElementById("gh");
-var dropE = document.querySelectorAll(".dropE");
-var selectS = document.querySelectorAll(".selectS");
-var checkS = document.querySelectorAll(".checkS");
-var nameC = document.querySelectorAll(".nameC");
-var puttingDiv = document.getElementById("puttingDiv");
-var checkAllInputs = document.getElementById("checkAllInputs");
-var allChecked = false;
+let nameInput = document.getElementById("nameInput");
+let groupInput = document.getElementById("groupInput");
+let outputDiv = document.getElementById("outputDiv");
+let nameDiv = document.getElementById("nameDiv");
+let submitB = document.getElementById("submitB");
+let gSubmit = document.getElementById("gSubmit");
+let addPutButton = document.getElementById("addPutButton");
+let clearB = document.getElementById("clearB");
+let nh = document.getElementById("nh");
+let aNA = [];
+let numGr = 0;
+let groupObject = {};
+let dropFirst = document.getElementById("dropFirst");
+let dropSecond = document.getElementById("dropSecond");
+let pSubmit = document.getElementById("pSubmit");
+let gh = document.getElementById("gh");
+let dropE = document.querySelectorAll(".dropE");
+let selectS = document.querySelectorAll(".selectS");
+let checkS = document.querySelectorAll(".checkS");
+let nameC = document.querySelectorAll(".nameC");
+let puttingDiv = document.getElementById("puttingDiv");
+let checkAllInputs = document.getElementById("checkAllInputs");
+let allChecked = false;
+let errorMessage = document.getElementById("errorMessage");
 document.addEventListener("keydown", keyPressed);
 submitB.addEventListener("click", putDownName);
 clearB.addEventListener("click", clearE);
@@ -42,9 +43,10 @@ function keyPressed(event) {
 
 function putDownName() {
   let name = nameInput.value.trim();
-  if (name != "") {
+  if (name != "" && !aNA.includes(name)) {
     //put down on list
-    var newN = document.createElement("h2");
+    errorMessage.innerHTML = "";
+    let newN = document.createElement("h2");
     newN.innerHTML = name;
     aNA.push(name);
     newN.classList.add("nameC");
@@ -55,41 +57,43 @@ function putDownName() {
     updateNamesNum();
     // put down in select options - "don't put..."
     updateSelects();
-    for (var i = 0; i < selectS.length; i++) {
-      var optionE = document.createElement("option");
+    for (let i = 0; i < selectS.length; i++) {
+      let optionE = document.createElement("option");
       optionE.innerHTML = name;
       selectS[i].appendChild(optionE);
     }
+  } else {
+    errorMessage.innerHTML = "Error: Either the name you want to put in the list is blank or already in the list."
   }
 }
 
 function addSeperation() {
-  var outsideDiv = document.createElement("div");
+  let outsideDiv = document.createElement("div");
   outsideDiv.classList.add("dropE");
 
-  var deleteButton = document.createElement("button");
+  let deleteButton = document.createElement("button");
   deleteButton.innerHTML = "Delete";
   deleteButton.marginLeft = "100px";
   deleteButton.addEventListener("click", deleteSeparation);
 
-  var inputDiv = document.createElement("div");
-  var sepCheck = document.createElement("input");
+  let inputDiv = document.createElement("div");
+  let sepCheck = document.createElement("input");
   sepCheck.type = "checkbox";
   sepCheck.classList.add("checkS");
   inputDiv.innerHTML = "Seperate! ";
   inputDiv.classList.add("inputDV");
 
-  var selectDiv1 = document.createElement("select");
-  var selectDiv2 = document.createElement("select");
+  let selectDiv1 = document.createElement("select");
+  let selectDiv2 = document.createElement("select");
   selectDiv1.classList.add("selectS");
   selectDiv2.classList.add("selectS");
   selectS = document.querySelectorAll(".selectS");
   sepCheck.selectUno = selectDiv1;
   sepCheck.selectDos = selectDiv2;
 
-  for (var i = 0; i < aNA.length; i++) {
-    var optionN = document.createElement("option");
-    var optionN2 = document.createElement("option");
+  for (let i = 0; i < aNA.length; i++) {
+    let optionN = document.createElement("option");
+    let optionN2 = document.createElement("option");
     optionN.innerHTML = aNA[i];
     optionN2.innerHTML = aNA[i];
     selectDiv1.appendChild(optionN);
@@ -126,10 +130,10 @@ function clearE() {
   //clear select
   updateSelects();
   updateChecks();
-  for (var i = 0; i < selectS.length; i++) {
+  for (let i = 0; i < selectS.length; i++) {
     selectS[i].innerHTML = "";
   }
-  for (var i = 0; i < checkS.length; i++) {
+  for (let i = 0; i < checkS.length; i++) {
     checkS[i].checked = false;
   }
   updateNamesNum();
@@ -137,25 +141,26 @@ function clearE() {
 }
 
 function makeGroups() {
+  console.log(aNA, "aNA make groups");
   shuffle();
   groupObject = {};
-  var cN = 0;
-  var rG = parseInt(groupInput.value, 10);
+  let cN = 0;
+  let rG = parseInt(groupInput.value, 10);
   numGr = 0;
   if (rG > 0) {
     if (rG == 1) {
       groupObject["Group 1"] = {};
-      for (var i = 0; i < aNA.length; i++) {
+      for (let i = 0; i < aNA.length; i++) {
         groupObject["Group 1"]["person " + (i + 1)] = aNA[i];
       }
     } else {
-      for (var i = 0; i < rG; i++) {
+      for (let i = 0; i < rG; i++) {
         groupObject["Group " + (numGr + 1)] = {};
         numGr += 1;
       }
       let nameDown = 0;
-      for (var i = 0; i < aNA.length / rG; i++) {
-        for (var gro in groupObject) {
+      for (let i = 0; i < aNA.length / rG; i++) {
+        for (let gro in groupObject) {
           if (aNA[nameDown] != undefined) {
             groupObject[gro]["person " + (i + 1)] = aNA[nameDown];
             nameDown += 1;
@@ -170,7 +175,7 @@ function makeGroups() {
 
 function printGroupsOut() {
   outputDiv.innerHTML = "";
-  for (var grouP in groupObject) {
+  for (let grouP in groupObject) {
     let outsideBox = document.createElement("div");
     outputDiv.append(outsideBox);
     let groupNameDiv = document.createElement("div");
@@ -184,7 +189,7 @@ function printGroupsOut() {
       personDiv.innerHTML = "No people in this group";
       personDiv.classList.add("noPeople");
     } else {
-      for (var perS in groupObject[grouP]) {
+      for (let perS in groupObject[grouP]) {
         personDiv.innerHTML =
           personDiv.innerHTML + groupObject[grouP][perS] + ", ";
       }
@@ -199,62 +204,83 @@ function printGroupsOut() {
 function deleteGroup() {
   delete groupObject[this.nameG];
   outputDiv.removeChild(this.parentElement);
-  nameDiv.innerHTML = "";
-  for (var i = 0; i < aNA.length; i++) {
-    var newN = document.createElement("h2");
-    newN.innerHTML = aNA[i];
-    newN.classList.add("nameC");
-    newN.addEventListener("click", deleteName);
-    nameDiv.appendChild(newN);
-    nameInput.value = "";
-    updateNamesNum();
-    newN.numB = aNA.length;
-  }
   updateGroupsNum();
 }
 
 function deleteName() {
-  console.log(this.numB, this.numB-1);
-  updateSelects();
-  for (var i = 0; i < selectS.length; i++) {
-    selectS[i].removeChild(selectS[i].children[this.numB-1]);
-  }
-  let chingK = this.numB-1;
-  for (var i = 0; i <= aNA.length; i++) {
-    if (i == this.numB-1) {
-      aNA.splice(i, 1);
+  let nameToDelete = this.innerHTML;
+  let indexToDelete = -1;
+  
+  // Find the correct index in the aNA array
+  for (let i = 0; i < aNA.length; i++) {
+    if (aNA[i] === nameToDelete) {
+      indexToDelete = i;
       break;
     }
   }
-  updateNamec();
-  for (var i = 0; i < nameC.length; i++) {
-    if (i >= chingK) {
-      nameC[i].numB = parseInt(nameC[i].numB, 10) - 1;
+  
+  // Remove from aNA array
+  if (indexToDelete !== -1) {
+    aNA.splice(indexToDelete, 1);
+  }
+  
+  // Remove from all select elements
+  updateSelects();
+  for (let i = 0; i < selectS.length; i++) {
+    // Find and remove the option with matching text
+    inner: for (let j = selectS[i].options.length - 1; j >= 0; j--) {
+      if (selectS[i].options[j].text === nameToDelete) {
+        selectS[i].removeChild(selectS[i].options[j]);
+        break inner;
+      }
     }
   }
-  if (groupObject["Group 1"] != undefined) {
-    firstP: for (var grouS in groupObject) {
-      secP: for (var perS in groupObject[grouS]) {
-        if (groupObject[grouS][perS] == this.innerHTML) {
-          if (Object.keys(groupObject[grouS]).length == 1) {
-            delete groupObject[grouS];
-          } else {
-            delete groupObject[grouS][perS];
+  
+  // Remove from DOM
+  nameDiv.removeChild(this);
+  
+  // Update the numB property for remaining name elements
+  updateNamec();
+  for (let i = 0; i < nameC.length; i++) {
+    nameC[i].numB = i + 1;
+  }
+  
+  // Check if groups exist and handle group deletion properly
+  if (Object.keys(groupObject).length > 0) {
+    let groupsToDelete = [];
+    
+    // Find all groups that contain this person and remove them
+    for (let grouS in groupObject) {
+      for (let perS in groupObject[grouS]) {
+        if (groupObject[grouS][perS] == nameToDelete) {
+          // Remove the person from the group
+          delete groupObject[grouS][perS];
+          
+          // If the group is now empty, mark it for deletion
+          if (Object.keys(groupObject[grouS]).length == 0) {
+            groupsToDelete.push(grouS);
           }
+          break; // Person can only be in one group, so break after finding them
         }
       }
     }
+    
+    // Delete empty groups
+    for (let groupToDelete of groupsToDelete) {
+      delete groupObject[groupToDelete];
+    }
+    
+    // Update the display
     printGroupsOut();
   }
-  nameDiv.removeChild(this);
+  
   updateNamesNum();
   updateGroupsNum();
-  console.log(aNA);
 }
 
 function doTheCheck() {
   updateChecks();
-  var recentA = allChecked;
+  let recentA = allChecked;
   if (allChecked == false) {
     allChecked = true;
     this.innerHTML = "Uncheck All of Them";
@@ -262,7 +288,7 @@ function doTheCheck() {
     allChecked = false;
     this.innerHTML = "Check All of Them";
   }
-  for (var i = 0; i < checkS.length; i++) {
+  for (let i = 0; i < checkS.length; i++) {
     checkS[i].checked = allChecked;
   }
 }
@@ -270,49 +296,78 @@ function doTheCheck() {
 function separateOthers(kNum) {
   updateChecks();
   updateSelects();
-  var selectK = 0;
-  for (var i = 0; i < checkS.length; i++) {
+  let selectK = 0;
+  let maxAttempts = 100; // Prevent infinite loops
+  
+  for (let i = 0; i < checkS.length; i++) {
     if (checkS[i].checked == true) {
-      let reqU = {
-        first: "",
-        second: ""
-      };
-      let couT = 0;
-      pCheck: for (var gro in groupObject) {
-        for (var person in groupObject[gro]) {
-          if (
-            groupObject[gro][person] ==
-              selectS[selectK].options[selectS[selectK].selectedIndex].text ||
-            groupObject[gro][person] ==
-              selectS[selectK + 1].options[selectS[selectK + 1].selectedIndex]
-                .text
-          ) {
-            couT += 1;
-            if (couT == 1) {
-              reqU["first"] = [gro, person];
-            } else {
-              reqU["second"] = [gro, person];
-              break pCheck;
-            }
+      let person1Name = selectS[selectK].options[selectS[selectK].selectedIndex].text;
+      let person2Name = selectS[selectK + 1].options[selectS[selectK + 1].selectedIndex].text;
+      
+      // Find which groups these people are in
+      let person1Group = null;
+      let person2Group = null;
+      let person1Key = null;
+      let person2Key = null;
+      
+      for (let gro in groupObject) {
+        for (let person in groupObject[gro]) {
+          if (groupObject[gro][person] == person1Name) {
+            person1Group = gro;
+            person1Key = person;
+          }
+          if (groupObject[gro][person] == person2Name) {
+            person2Group = gro;
+            person2Key = person;
           }
         }
       }
-      if (reqU["first"][0] == reqU["second"][0]) {
-        var numV = reqU["first"][0];
-        var personV = reqU["first"][1];
-        var randomOf = "Group " + Math.floor(Math.random() * kNum + 1);
-        if (randomOf == numV) {
-          while (randomOf == numV) {
-            randomOf = "Group " + Math.floor(Math.random() * kNum + 1);
+      
+      // If both people are in the same group, separate them
+      if (person1Group && person2Group && person1Group == person2Group) {
+        let attempts = 0;
+        let separated = false;
+        
+        while (!separated && attempts < maxAttempts) {
+          // Find a different group to move person1 to
+          let availableGroups = Object.keys(groupObject).filter(g => g !== person1Group);
+          
+          if (availableGroups.length > 0) {
+            // Try to find a group where person2 is not present
+            let targetGroup = null;
+            for (let ag of availableGroups) {
+              let hasConflict = false;
+              for (let p in groupObject[ag]) {
+                if (groupObject[ag][p] == person2Name) {
+                  hasConflict = true;
+                  break;
+                }
+              }
+              if (!hasConflict) {
+                targetGroup = ag;
+                break;
+              }
+            }
+            
+            // If no conflict-free group found, use any available group
+            if (!targetGroup) {
+              targetGroup = availableGroups[Math.floor(Math.random() * availableGroups.length)];
+            }
+            
+            // Find someone in the target group to swap with
+            let targetGroupKeys = Object.keys(groupObject[targetGroup]);
+            if (targetGroupKeys.length > 0) {
+              let randomPersonKey = targetGroupKeys[Math.floor(Math.random() * targetGroupKeys.length)];
+              let personToSwap = groupObject[targetGroup][randomPersonKey];
+              
+              // Perform the swap
+              groupObject[targetGroup][randomPersonKey] = person1Name;
+              groupObject[person1Group][person1Key] = personToSwap;
+              separated = true;
+            }
           }
+          attempts++;
         }
-        var ranP = Math.floor(
-          Math.random() * Object.keys(groupObject[randomOf]).length + 1
-        );
-        var randomPerson = groupObject[randomOf]["person " + ranP];
-        var keepC = groupObject[numV][personV];
-        groupObject[randomOf]["person " + ranP] = groupObject[numV][personV];
-        groupObject[numV][personV] = randomPerson;
       }
       selectK += 2;
     }
@@ -320,12 +375,14 @@ function separateOthers(kNum) {
 }
 
 function shuffle() {
-  for (var i = 0; i < 100; i++) {
-    var random = Math.floor(Math.random() * aNA.length);
-    var random2 = Math.floor(Math.random() * aNA.length);
-    var extracup = aNA[random];
-    aNA[random] = aNA[random2];
-    aNA[random2] = extracup;
+  if (aNA.length >= 1) {
+    for (let i = 0; i < 100; i++) {
+      let random = Math.floor(Math.random() * aNA.length);
+      let random2 = Math.floor(Math.random() * aNA.length);
+      let extracup = aNA[random];
+      aNA[random] = aNA[random2];
+      aNA[random2] = extracup;
+    }
   }
 }
 

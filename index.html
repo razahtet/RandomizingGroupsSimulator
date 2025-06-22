@@ -17,18 +17,24 @@
 <body>
   <h1 style="color: crimson">Randomizing Groups Simulator (By Raza/Htet)</h1>
   <h3 style="color: purple">
-    - Press the "Submit Groups' Number" button to randomize groups
+    - Press the "Submit # of Groups" button to randomize groups
   </h3>
   <h3 style="color: purple">
     - Press the check box right of "Separate!" to enable separating two people being in one group
   </h3>
   <h3 style="color: goldenrod">
-    - Update!: Hilight over the name or the group in the boxes to and click them to remove the name or group.
+    - Update!: Hover over the name or the group in the boxes to and click them to remove the name or group.
   </h3>
-  <h2 style="color: green">Put in Names: <input id="nameInput" type="text" /><button id="submitB">Submit Name</button>
-  </h2>
-  <h2 style="color: brown">Groups #: <input id="groupInput" min="1" type="number" /><button id="gSubmit">Submit Groups'
-      Number</button></h2>
+  <div>
+    <div>
+      <h2 style="color: green">Put in Names: <input id="nameInput" type="text" /><button id="submitB">Submit Name</button>
+      </h2>
+      <h2 style="color: brown">Groups #: <input id="groupInput" min="1" type="number" /><button id="gSubmit">Submit # of Groups</button></h2>
+    </div>
+    <div id="errorDiv">
+      <h3 id="errorMessage"></h3>
+    </div>
+  </div>
   <div>
     <button id="addPutButton">
       Add Another Separation
