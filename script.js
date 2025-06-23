@@ -1,27 +1,26 @@
-let nameInput = document.getElementById("nameInput");
-let groupInput = document.getElementById("groupInput");
-let outputDiv = document.getElementById("outputDiv");
-let nameDiv = document.getElementById("nameDiv");
-let submitB = document.getElementById("submitB");
-let gSubmit = document.getElementById("gSubmit");
-let addPutButton = document.getElementById("addPutButton");
-let clearB = document.getElementById("clearB");
-let nh = document.getElementById("nh");
+const nameInput = document.getElementById("nameInput");
+const groupInput = document.getElementById("groupInput");
+const outputDiv = document.getElementById("outputDiv");
+const nameDiv = document.getElementById("nameDiv");
+const submitB = document.getElementById("submitB");
+const gSubmit = document.getElementById("gSubmit");
+const addPutButton = document.getElementById("addPutButton");
+const clearB = document.getElementById("clearB");
+const nh = document.getElementById("nh");
 let aNA = [];
 let numGr = 0;
 let groupObject = {};
-let dropFirst = document.getElementById("dropFirst");
-let dropSecond = document.getElementById("dropSecond");
-let pSubmit = document.getElementById("pSubmit");
-let gh = document.getElementById("gh");
-let dropE = document.querySelectorAll(".dropE");
+const dropFirst = document.getElementById("dropFirst");
+const dropSecond = document.getElementById("dropSecond");
+const pSubmit = document.getElementById("pSubmit");
+const gh = document.getElementById("gh");
 let selectS = document.querySelectorAll(".selectS");
 let checkS = document.querySelectorAll(".checkS");
 let nameC = document.querySelectorAll(".nameC");
-let puttingDiv = document.getElementById("puttingDiv");
-let checkAllInputs = document.getElementById("checkAllInputs");
+const puttingDiv = document.getElementById("puttingDiv");
+const checkAllInputs = document.getElementById("checkAllInputs");
 let allChecked = false;
-let errorMessage = document.getElementById("errorMessage");
+const errorMessage = document.getElementById("errorMessage");
 document.addEventListener("keydown", keyPressed);
 submitB.addEventListener("click", putDownName);
 clearB.addEventListener("click", clearE);
@@ -40,7 +39,7 @@ function keyPressed(event) {
 }
 
 function putDownName() {
-  let name = nameInput.value.trim();
+  const name = nameInput.value.trim();
   errorMessage.innerHTML = "";
   if (name == "") {
     errorMessage.innerHTML = "Names in the list cannot be blank. Please type in a name.";
@@ -49,7 +48,7 @@ function putDownName() {
   } else {
     //put down on list
     errorMessage.innerHTML = "";
-    let newN = document.createElement("h2");
+    const newN = document.createElement("h2");
     newN.innerHTML = name;
     aNA.push(name);
     newN.classList.add("nameC");
@@ -61,7 +60,7 @@ function putDownName() {
     // put down in select options - "don't put..."
     updateSelects();
     for (let i = 0; i < selectS.length; i++) {
-      let optionE = document.createElement("option");
+      const optionE = document.createElement("option");
       optionE.innerHTML = name;
       selectS[i].appendChild(optionE);
     }
@@ -69,23 +68,23 @@ function putDownName() {
 }
 
 function addSeparation() {
-  let outsideDiv = document.createElement("div");
+  const outsideDiv = document.createElement("div");
   outsideDiv.classList.add("dropE");
 
-  let deleteButton = document.createElement("button");
+  const deleteButton = document.createElement("button");
   deleteButton.innerHTML = "Delete";
   deleteButton.marginLeft = "100px";
   deleteButton.addEventListener("click", deleteSeparation);
 
-  let inputDiv = document.createElement("div");
-  let sepCheck = document.createElement("input");
+  const inputDiv = document.createElement("div");
+  const sepCheck = document.createElement("input");
   sepCheck.type = "checkbox";
   sepCheck.classList.add("checkS");
   inputDiv.innerHTML = "Separate!";
   inputDiv.classList.add("inputDV");
 
-  let selectDiv1 = document.createElement("select");
-  let selectDiv2 = document.createElement("select");
+  const selectDiv1 = document.createElement("select");
+  const selectDiv2 = document.createElement("select");
   selectDiv1.classList.add("selectS");
   selectDiv2.classList.add("selectS");
   selectS = document.querySelectorAll(".selectS");
@@ -93,8 +92,8 @@ function addSeparation() {
   sepCheck.selectDos = selectDiv2;
 
   for (let i = 0; i < aNA.length; i++) {
-    let optionN = document.createElement("option");
-    let optionN2 = document.createElement("option");
+    const optionN = document.createElement("option");
+    const optionN2 = document.createElement("option");
     optionN.innerHTML = aNA[i];
     optionN2.innerHTML = aNA[i];
     selectDiv1.appendChild(optionN);
@@ -144,8 +143,7 @@ function clearE() {
 function makeGroups() {
   shuffle();
   groupObject = {};
-  let cN = 0;
-  let rG = parseInt(groupInput.value, 10);
+  const rG = parseInt(groupInput.value, 10);
   numGr = 0;
   if (rG > 0) {
     if (rG == 1) {
@@ -176,15 +174,15 @@ function makeGroups() {
 function printGroupsOut() {
   outputDiv.innerHTML = "";
   for (let grouP in groupObject) {
-    let outsideBox = document.createElement("div");
+    const outsideBox = document.createElement("div");
     outputDiv.append(outsideBox);
-    let groupNameDiv = document.createElement("div");
+    const groupNameDiv = document.createElement("div");
     groupNameDiv.innerHTML = grouP + ":";
     groupNameDiv.nameG = grouP;
     groupNameDiv.classList.add("smallO");
     groupNameDiv.addEventListener("click", deleteGroup);
     outsideBox.append(groupNameDiv);
-    let personDiv = document.createElement("div");
+    const personDiv = document.createElement("div");
     if (Object.keys(groupObject[grouP]).length == 0) {
       personDiv.innerHTML = "No people in this group";
       personDiv.classList.add("noPeople");
@@ -208,7 +206,7 @@ function deleteGroup() {
 }
 
 function deleteName() {
-  let nameToDelete = this.innerHTML;
+  const nameToDelete = this.innerHTML;
   let indexToDelete = -1;
   
   // Find the correct index in the aNA array
@@ -280,7 +278,6 @@ function deleteName() {
 
 function doTheCheck() {
   updateChecks();
-  let recentA = allChecked;
   if (allChecked == false) {
     allChecked = true;
     this.innerHTML = "Uncheck All of Them";
