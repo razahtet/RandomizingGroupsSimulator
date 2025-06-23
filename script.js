@@ -35,6 +35,8 @@ nameInput.focus();
 function keyPressed(event) {
   if (event.keyCode == 13) {
     putDownName();
+  } else if (event.keyCode == 46) {
+    clearE();
   }
 }
 
@@ -120,24 +122,26 @@ function deleteSeparation() {
 }
 
 function clearE() {
-  //clear list
-  nameDiv.innerHTML = "";
-  aNA = [];
-  groupObject = {};
-  nameInput.value = "";
-  groupInput.value = "";
-  outputDiv.innerHTML = "";
-  //clear select
-  updateSelects();
-  updateChecks();
-  for (let i = 0; i < selectS.length; i++) {
-    selectS[i].innerHTML = "";
+  if (confirm("Are you sure you want to clear everything?")) {
+    //clear list
+    nameDiv.innerHTML = "";
+    aNA = [];
+    groupObject = {};
+    nameInput.value = "";
+    groupInput.value = "";
+    outputDiv.innerHTML = "";
+    //clear select
+    updateSelects();
+    updateChecks();
+    for (let i = 0; i < selectS.length; i++) {
+      selectS[i].innerHTML = "";
+    }
+    for (let i = 0; i < checkS.length; i++) {
+      checkS[i].checked = false;
+    }
+    updateNamesNum();
+    updateGroupsNum();
   }
-  for (let i = 0; i < checkS.length; i++) {
-    checkS[i].checked = false;
-  }
-  updateNamesNum();
-  updateGroupsNum();
 }
 
 function makeGroups() {
