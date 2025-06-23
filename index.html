@@ -25,13 +25,13 @@
   <h3 style="color: goldenrod">
     - Update!: Hover over the name or the group in the boxes to and click them to remove the name or group.
   </h3>
-  <div>
+  <div id="initial">
     <div>
       <h2 style="color: green">Put in Names: <input id="nameInput" type="text" /><button id="submitB">Submit Name</button>
       </h2>
       <h2 style="color: brown">Groups #: <input id="groupInput" min="1" type="number" /><button id="gSubmit">Submit # of Groups</button></h2>
     </div>
-    <div id="errorDiv">
+    <div>
       <h3 id="errorMessage"></h3>
     </div>
   </div>
@@ -45,13 +45,12 @@
   </div>
 
   <h2 id="puttingDiv">
-    <div class="dropE" id="dPutdiv"> Don't Put <select class="selectS" disabled="true" id="dropFirst"></select> with
-      <select class="selectS" disabled="true" id="dropSecond"></select> Please.
+    <div class="dropE" id="dPutdiv"> Don't Put <select class="selectS" id="dropFirst"></select> with
+      <select class="selectS" id="dropSecond"></select> Please.
       <div id="sepDiv">
         Separate! <input id="pSubmit" type="checkbox" />
       </div>
     </div>
-
   </h2>
   <div>
     <h2 id="nh" style="color: orange">

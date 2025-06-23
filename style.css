@@ -136,10 +136,10 @@ button:hover {
   cursor: pointer;
 }
 
-#errorDiv {
-  display: inline-block;
-}
-
 #errorMessage {
   color: crimson;
+}
+
+#initial>div {
+  display: inline-block;
 }

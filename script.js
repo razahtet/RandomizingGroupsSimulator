@@ -41,7 +41,12 @@ function keyPressed(event) {
 
 function putDownName() {
   let name = nameInput.value.trim();
-  if (name != "" && !aNA.includes(name)) {
+  errorMessage.innerHTML = "";
+  if (name == "") {
+    errorMessage.innerHTML = "Names in the list cannot be blank. Please type in a name.";
+  } else if (aNA.includes(name)) {
+    errorMessage.innerHTML = "The name is already in the list. Please type in another name.";
+  } else {
     //put down on list
     errorMessage.innerHTML = "";
     let newN = document.createElement("h2");
@@ -60,8 +65,6 @@ function putDownName() {
       optionE.innerHTML = name;
       selectS[i].appendChild(optionE);
     }
-  } else {
-    errorMessage.innerHTML = "Error: Either the name you want to put in the list is blank or already in the list."
   }
 }
 
