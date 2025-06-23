@@ -26,14 +26,12 @@ document.addEventListener("keydown", keyPressed);
 submitB.addEventListener("click", putDownName);
 clearB.addEventListener("click", clearE);
 gSubmit.addEventListener("click", makeGroups);
-addPutButton.addEventListener("click", addSeperation);
+addPutButton.addEventListener("click", addSeparation);
 checkAllInputs.addEventListener("click", doTheCheck);
 pSubmit.classList.add("checkS");
 pSubmit.selectUno = dropFirst;
 pSubmit.selectDos = dropSecond;
 nameInput.focus();
-dropFirst.disabled = false;
-dropSecond.disabled = false;
 
 function keyPressed(event) {
   if (event.keyCode == 13) {
@@ -67,7 +65,7 @@ function putDownName() {
   }
 }
 
-function addSeperation() {
+function addSeparation() {
   let outsideDiv = document.createElement("div");
   outsideDiv.classList.add("dropE");
 
@@ -80,7 +78,7 @@ function addSeperation() {
   let sepCheck = document.createElement("input");
   sepCheck.type = "checkbox";
   sepCheck.classList.add("checkS");
-  inputDiv.innerHTML = "Seperate! ";
+  inputDiv.innerHTML = "Separate!";
   inputDiv.classList.add("inputDV");
 
   let selectDiv1 = document.createElement("select");
