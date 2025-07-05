@@ -149,7 +149,16 @@ function makeGroups() {
   groupObject = {};
   const rG = parseInt(groupInput.value, 10);
   numGr = 0;
+  errorMessage.innerHTML = "";
+  
   if (rG > 0) {
+    // Check if separations are possible before creating groups
+    const separationCheck = checkSeparationsPossible(rG);
+    if (!separationCheck.possible) {
+      errorMessage.innerHTML = separationCheck.message;
+      return;
+    }
+    
     if (rG == 1) {
       groupObject["Group 1"] = {};
       for (let i = 0; i < aNA.length; i++) {
@@ -169,7 +178,11 @@ function makeGroups() {
           }
         }
       }
-      separateOthers(rG);
+      const separationResult = separateOthersEfficient(rG);
+      if (!separationResult.success) {
+        errorMessage.innerHTML = separationResult.message;
+        return;
+      }
     }
     printGroupsOut();
   }
@@ -294,6 +307,118 @@ function doTheCheck() {
   }
 }
 
+function checkSeparationsPossible(numGroups) {
+  updateChecks();
+  updateSelects();
+  
+  // If only one group, separations are impossible
+  if (numGroups <= 1) {
+    let hasActiveSeparations = false;
+    let selectK = 0;
+    for (let i = 0; i < checkS.length; i++) {
+      if (checkS[i].checked == true) {
+        hasActiveSeparations = true;
+        break;
+      }
+    }
+    if (hasActiveSeparations) {
+      return {
+        possible: false,
+        message: "Error: Cannot separate people when there is only 1 group. Please increase the number of groups or uncheck the separations."
+      };
+    }
+  }
+  
+  // Get all active separation pairs
+  let separationPairs = [];
+  let selectK = 0;
+  for (let i = 0; i < checkS.length; i++) {
+    if (checkS[i].checked == true) {
+      let person1Name = selectS[selectK].options[selectS[selectK].selectedIndex].text;
+      let person2Name = selectS[selectK + 1].options[selectS[selectK + 1].selectedIndex].text;
+      
+      if (person1Name === person2Name) {
+        return {
+          possible: false,
+          message: "Error: Cannot separate a person from themselves. Please select different people in the separation dropdowns."
+        };
+      }
+      
+      separationPairs.push([person1Name, person2Name]);
+    }
+    selectK += 2;
+  }
+  
+  // If no separations requested, it's always possible
+  if (separationPairs.length === 0) {
+    return { possible: true, message: "" };
+  }
+  
+  // Try to actually solve the constraint satisfaction problem
+  const result = tryAssignPeopleToGroups(aNA, numGroups, separationPairs);
+  if (!result.success) {
+    return {
+      possible: false,
+      message: result.message
+    };
+  }
+  
+  return { possible: true, message: "" };
+}
+
+function separateOthersEfficient(numGroups) {
+  updateChecks();
+  updateSelects();
+  
+  // Get all active separation pairs
+  let separationPairs = [];
+  let selectK = 0;
+  for (let i = 0; i < checkS.length; i++) {
+    if (checkS[i].checked == true) {
+      let person1Name = selectS[selectK].options[selectS[selectK].selectedIndex].text;
+      let person2Name = selectS[selectK + 1].options[selectS[selectK + 1].selectedIndex].text;
+      separationPairs.push([person1Name, person2Name]);
+    }
+    selectK += 2;
+  }
+  
+  // If no separations needed, return success
+  if (separationPairs.length === 0) {
+    return { success: true, message: "" };
+  }
+  
+  // Use the backtracking algorithm to find optimal assignment
+  const result = tryAssignPeopleToGroups(aNA, numGroups, separationPairs);
+  if (!result.success) {
+    return {
+      success: false,
+      message: result.message
+    };
+  }
+  
+  // Reconstruct groupObject based on the optimal assignment
+  // Clear current groups
+  for (let gro in groupObject) {
+    groupObject[gro] = {};
+  }
+  
+  // Assign people to groups based on the backtracking result
+  let personCounters = {};
+  for (let i = 0; i < numGroups; i++) {
+    personCounters["Group " + (i + 1)] = 1;
+  }
+  
+  for (let person in result.assignment) {
+    let groupIndex = result.assignment[person];
+    let groupName = "Group " + (groupIndex + 1);
+    let personKey = "person " + personCounters[groupName];
+    groupObject[groupName][personKey] = person;
+    personCounters[groupName]++;
+  }
+  
+  return { success: true, message: "" };
+}
+
 function separateOthers(kNum) {
   updateChecks();
   updateSelects();
@@ -372,6 +497,92 @@ function separateOthers(kNum) {
       }
       selectK += 2;
     }
+  }
+}
+
+function tryAssignPeopleToGroups(people, numGroups, separationPairs) {
+  // Create a conflict graph
+  let conflicts = {};
+  for (let person of people) {
+    conflicts[person] = new Set();
+  }
+  
+  for (let [person1, person2] of separationPairs) {
+    conflicts[person1].add(person2);
+    conflicts[person2].add(person1);
+  }
+  
+  // Shuffle people array to add randomness to the assignment process
+  let shuffledPeople = [...people];
+  for (let i = shuffledPeople.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledPeople[i], shuffledPeople[j]] = [shuffledPeople[j], shuffledPeople[i]];
+  }
+  
+  // Try to assign people to groups using backtracking
+  let assignment = {};
+  let groups = [];
+  for (let i = 0; i < numGroups; i++) {
+    groups.push([]);
+  }
+  
+  function canAssignToGroup(person, groupIndex) {
+    // Check if this person conflicts with anyone already in this group
+    for (let otherPerson of groups[groupIndex]) {
+      if (conflicts[person].has(otherPerson)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  function backtrack(personIndex) {
+    if (personIndex === shuffledPeople.length) {
+      return true; // Successfully assigned all people
+    }
+    
+    let person = shuffledPeople[personIndex];
+    
+    // Create array of group indices and shuffle them for randomness
+    let groupIndices = [];
+    for (let i = 0; i < numGroups; i++) {
+      groupIndices.push(i);
+    }
+    
+    // Shuffle group indices to try groups in random order
+    for (let i = groupIndices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [groupIndices[i], groupIndices[j]] = [groupIndices[j], groupIndices[i]];
+    }
+    
+    // Try assigning this person to each group in random order
+    for (let groupIndex of groupIndices) {
+      if (canAssignToGroup(person, groupIndex)) {
+        // Assign person to this group
+        groups[groupIndex].push(person);
+        assignment[person] = groupIndex;
+        
+        // Recursively try to assign the next person
+        if (backtrack(personIndex + 1)) {
+          return true;
+        }
+        
+        // Backtrack: remove person from this group
+        groups[groupIndex].pop();
+        delete assignment[person];
+      }
+    }
+    
+    return false; // Could not assign this person to any group
+  }
+  
+  if (backtrack(0)) {
+    return { success: true, assignment: assignment };
+  } else {
+    return { 
+      success: false, 
+      message: "Error: The separation constraints cannot be satisfied with the given number of groups. Please increase the number of groups or reduce the separation requirements." 
+    };
   }
 }
 
