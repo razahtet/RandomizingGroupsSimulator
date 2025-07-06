@@ -382,12 +382,35 @@ function separateOthersEfficient(numGroups) {
     selectK += 2;
   }
   
-  // If no separations needed, return success
+  // If no separations needed, use smart balanced assignment without constraints
   if (separationPairs.length === 0) {
+    // Use the smart algorithm even without separations for better balance
+    const result = tryAssignPeopleToGroups(aNA, numGroups, []);
+    if (result.success) {
+      // Reconstruct groupObject based on the optimal assignment
+      // Clear current groups
+      for (let gro in groupObject) {
+        groupObject[gro] = {};
+      }
+      
+      // Assign people to groups based on the smart assignment
+      let personCounters = {};
+      for (let i = 0; i < numGroups; i++) {
+        personCounters["Group " + (i + 1)] = 1;
+      }
+      
+      for (let person in result.assignment) {
+        let groupIndex = result.assignment[person];
+        let groupName = "Group " + (groupIndex + 1);
+        let personKey = "person " + personCounters[groupName];
+        groupObject[groupName][personKey] = person;
+        personCounters[groupName]++;
+      }
+    }
     return { success: true, message: "" };
   }
   
-  // Use the backtracking algorithm to find optimal assignment
+  // Use the backtracking algorithm to find optimal assignment with separations
   const result = tryAssignPeopleToGroups(aNA, numGroups, separationPairs);
   if (!result.success) {
     return {
@@ -512,52 +535,121 @@ function tryAssignPeopleToGroups(people, numGroups, separationPairs) {
     conflicts[person2].add(person1);
   }
   
-  // Shuffle people array to add randomness to the assignment process
-  let shuffledPeople = [...people];
-  for (let i = shuffledPeople.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledPeople[i], shuffledPeople[j]] = [shuffledPeople[j], shuffledPeople[i]];
-  }
+  // Calculate ideal group sizes for balanced distribution
+  const totalPeople = people.length;
+  const baseSize = Math.floor(totalPeople / numGroups);
+  const remainder = totalPeople % numGroups;
   
-  // Try to assign people to groups using backtracking
-  let assignment = {};
-  let groups = [];
+  // Create target sizes for each group (some groups get +1 person if there's remainder)
+  let targetSizes = [];
   for (let i = 0; i < numGroups; i++) {
-    groups.push([]);
+    targetSizes.push(baseSize + (i < remainder ? 1 : 0));
   }
   
-  function canAssignToGroup(person, groupIndex) {
-    // Check if this person conflicts with anyone already in this group
-    for (let otherPerson of groups[groupIndex]) {
-      if (conflicts[person].has(otherPerson)) {
-        return false;
-      }
-    }
-    return true;
-  }
+  // Try multiple attempts with different strategies to find the best solution
+  let bestSolution = null;
+  let bestScore = -1;
+  const maxAttempts = 50;
   
-  function backtrack(personIndex) {
-    if (personIndex === shuffledPeople.length) {
-      return true; // Successfully assigned all people
-    }
-    
-    let person = shuffledPeople[personIndex];
-    
-    // Create array of group indices and shuffle them for randomness
-    let groupIndices = [];
-    for (let i = 0; i < numGroups; i++) {
-      groupIndices.push(i);
-    }
-    
-    // Shuffle group indices to try groups in random order
-    for (let i = groupIndices.length - 1; i > 0; i--) {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    // Shuffle people array to add randomness to the assignment process
+    let shuffledPeople = [...people];
+    for (let i = shuffledPeople.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [groupIndices[i], groupIndices[j]] = [groupIndices[j], groupIndices[i]];
+      [shuffledPeople[i], shuffledPeople[j]] = [shuffledPeople[j], shuffledPeople[i]];
     }
     
-    // Try assigning this person to each group in random order
-    for (let groupIndex of groupIndices) {
-      if (canAssignToGroup(person, groupIndex)) {
+    // Try to assign people to groups using smart backtracking
+    let assignment = {};
+    let groups = [];
+    for (let i = 0; i < numGroups; i++) {
+      groups.push([]);
+    }
+    
+    function canAssignToGroup(person, groupIndex) {
+      // Check if this person conflicts with anyone already in this group
+      for (let otherPerson of groups[groupIndex]) {
+        if (conflicts[person].has(otherPerson)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    
+    function getGroupPriority(groupIndex, currentPersonIndex, remainingPeople) {
+      let priority = 0;
+      
+      // Determine if this is an extreme case scenario
+      const peoplePerGroup = totalPeople / numGroups;
+      const isExtremeCaseScenario = peoplePerGroup <= 1;
+      
+      const currentSize = groups[groupIndex].length;
+      const targetSize = targetSizes[groupIndex];
+      
+      if (isExtremeCaseScenario) {
+        // In extreme cases, prioritize empty groups first to spread people out
+        if (currentSize === 0) {
+          priority += 2000; // Very high priority for empty groups
+        } else if (currentSize === 1) {
+          priority -= 500; // Lower priority for groups that already have someone
+        } else {
+          priority -= 1000; // Even lower priority for groups with multiple people
+        }
+        
+        // Still respect target sizes but with less weight
+        if (currentSize < targetSize) {
+          priority += 100;
+        } else if (currentSize >= targetSize) {
+          priority -= 200;
+        }
+      } else {
+        // Normal case: prefer groups under target size
+        if (currentSize < targetSize) {
+          priority += 1000; // High priority for under-target groups
+          priority += (targetSize - currentSize) * 100; // Higher priority for more under-target
+        } else if (currentSize >= targetSize) {
+          priority -= 1000; // Low priority for at-or-over-target groups
+        }
+        
+        // Avoid creating groups that would be too large
+        const maxAllowedSize = Math.ceil(totalPeople / numGroups) + 1;
+        if (currentSize >= maxAllowedSize) {
+          priority -= 10000; // Very low priority for oversized groups
+        }
+      }
+      
+      // Add some randomness to break ties
+      priority += Math.random() * 10;
+      
+      return priority;
+    }
+    
+    function backtrack(personIndex) {
+      if (personIndex === shuffledPeople.length) {
+        return true; // Successfully assigned all people
+      }
+      
+      let person = shuffledPeople[personIndex];
+      let remainingPeople = shuffledPeople.length - personIndex;
+      
+      // Create array of group indices with priorities
+      let groupOptions = [];
+      for (let i = 0; i < numGroups; i++) {
+        if (canAssignToGroup(person, i)) {
+          groupOptions.push({
+            index: i,
+            priority: getGroupPriority(i, personIndex, remainingPeople)
+          });
+        }
+      }
+      
+      // Sort by priority (highest first)
+      groupOptions.sort((a, b) => b.priority - a.priority);
+      
+      // Try assigning this person to each viable group in priority order
+      for (let option of groupOptions) {
+        let groupIndex = option.index;
+        
         // Assign person to this group
         groups[groupIndex].push(person);
         assignment[person] = groupIndex;
@@ -571,19 +663,115 @@ function tryAssignPeopleToGroups(people, numGroups, separationPairs) {
         groups[groupIndex].pop();
         delete assignment[person];
       }
+      
+      return false; // Could not assign this person to any group
     }
     
-    return false; // Could not assign this person to any group
+    if (backtrack(0)) {
+      // Calculate score for this solution
+      let score = calculateSolutionScore(groups, targetSizes);
+      if (score > bestScore) {
+        bestScore = score;
+        bestSolution = { success: true, assignment: assignment, groups: groups };
+      }
+      
+      // If we found a perfect solution, use it immediately
+      if (score >= 1000) {
+        break;
+      }
+    }
   }
   
-  if (backtrack(0)) {
-    return { success: true, assignment: assignment };
+  if (bestSolution) {
+    return bestSolution;
   } else {
     return { 
       success: false, 
-      message: "Error: The separation constraints cannot be satisfied with the given number of groups. Please increase the number of groups or reduce the separation requirements." 
+      message: "Error: The separation constraints cannot be satisfied with the given number of groups while maintaining balanced group sizes. Please increase the number of groups or reduce the separation requirements." 
     };
   }
+}
+
+function calculateSolutionScore(groups, targetSizes) {
+  let score = 0;
+  let emptyGroups = 0;
+  let singlePersonGroups = 0;
+  let totalPeople = 0;
+  let totalGroups = groups.length;
+  
+  // Count total people and group types
+  for (let i = 0; i < groups.length; i++) {
+    const groupSize = groups[i].length;
+    totalPeople += groupSize;
+    
+    if (groupSize === 0) {
+      emptyGroups++;
+    } else if (groupSize === 1) {
+      singlePersonGroups++;
+    }
+  }
+  
+  // Calculate the ideal scenario based on people-to-groups ratio
+  const peoplePerGroup = totalPeople / totalGroups;
+  const isExtremeCaseScenario = peoplePerGroup <= 1; // More groups than people or equal
+  
+  for (let i = 0; i < groups.length; i++) {
+    const groupSize = groups[i].length;
+    const targetSize = targetSizes[i];
+    
+    if (groupSize === 0) {
+      if (isExtremeCaseScenario) {
+        // In extreme cases, empty groups are expected and acceptable
+        score -= 10; // Very light penalty for empty groups
+      } else {
+        // In normal cases, avoid empty groups
+        score -= 200; // Moderate penalty for empty groups
+      }
+    } else if (groupSize === 1) {
+      if (isExtremeCaseScenario) {
+        // In extreme cases, single-person groups are preferred
+        score += 100; // Bonus for single-person groups
+      } else {
+        // In normal cases, single-person groups are less desirable
+        score -= 50; // Light penalty for single-person groups
+      }
+    } else {
+      // Multiple people in a group
+      if (isExtremeCaseScenario) {
+        // In extreme cases, this might not be ideal but still acceptable
+        score += 50; // Moderate bonus
+      } else {
+        // In normal cases, this is preferred
+        score += 100; // High bonus for groups with multiple people
+      }
+    }
+    
+    // Bonus for being close to target size (always important)
+    const sizeDifference = Math.abs(groupSize - targetSize);
+    if (sizeDifference === 0) {
+      score += 150; // Perfect size match bonus
+    } else {
+      score -= sizeDifference * 15; // Penalty for size deviation
+    }
+  }
+  
+  // Adaptive bonuses based on scenario
+  if (isExtremeCaseScenario) {
+    // In extreme cases, having all people assigned is most important
+    if (totalPeople > 0 && singlePersonGroups === totalPeople) {
+      score += 500; // Big bonus for optimal extreme case solution
+    }
+  } else {
+    // In normal cases, balanced groups are preferred
+    if (emptyGroups === 0) {
+      score += 300; // Bonus for no empty groups
+    }
+    if (singlePersonGroups === 0 && totalPeople > totalGroups) {
+      score += 200; // Bonus for no single-person groups when we have enough people
+    }
+  }
+  
+  return score;
 }
 
 function shuffle() {
