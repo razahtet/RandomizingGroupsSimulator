@@ -99,6 +99,32 @@ button:hover {
   font-family: monospace;
 }
 
+#uploadButton {
+  background-color: black;
+  color: white;
+  border-radius: 150px;
+  border: 10px ridge white;
+  font-family: monospace;
+  cursor: pointer;
+}
+
+#uploadButton:hover {
+  color: blue;
+  background-color: lightgreen;
+  border: 10px ridge skyblue;
+}
+
+#fileNameDisplay {
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #f0f0f0; /* Light gray background */
+  color: #333333; /* Dark gray text */
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
 #clearB {
   position: absolute;
   top: 430px;

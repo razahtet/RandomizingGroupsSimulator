@@ -7,6 +7,7 @@ const gSubmit = document.getElementById("gSubmit");
 const addPutButton = document.getElementById("addPutButton");
 const clearB = document.getElementById("clearB");
 const nh = document.getElementById("nh");
+const uploadButton = document.getElementById("uploadButton");
 let aNA = [];
 let numGr = 0;
 let groupObject = {};
@@ -21,12 +22,14 @@ const puttingDiv = document.getElementById("puttingDiv");
 const checkAllInputs = document.getElementById("checkAllInputs");
 let allChecked = false;
 const errorMessage = document.getElementById("errorMessage");
+
 document.addEventListener("keydown", keyPressed);
 submitB.addEventListener("click", putDownName);
 clearB.addEventListener("click", clearE);
 gSubmit.addEventListener("click", makeGroups);
 addPutButton.addEventListener("click", addSeparation);
 checkAllInputs.addEventListener("click", doTheCheck);
+uploadButton.addEventListener("click", handleFileUpload);
 pSubmit.classList.add("checkS");
 pSubmit.selectUno = dropFirst;
 pSubmit.selectDos = dropSecond;
@@ -138,6 +141,11 @@ function clearE() {
     }
     for (let i = 0; i < checkS.length; i++) {
       checkS[i].checked = false;
+    }
+    // Clear file name display
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    if (fileNameDisplay) {
+      fileNameDisplay.textContent = '';
     }
     updateNamesNum();
     updateGroupsNum();
@@ -805,3 +813,115 @@ function updateSelects() {
 function updateNamec() {
   nameC = document.querySelectorAll(".nameC");
 }
+
+function handleFileUpload() {
+  // Create a hidden file input to handle the file selection
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.txt';
+  fileInput.style.display = 'none';
+  
+  // Add event listener for file selection
+  fileInput.addEventListener('change', function() {
+    const file = fileInput.files[0];
+    
+    if (!file) {
+      errorMessage.innerHTML = "No file selected. Please choose a text file to upload.";
+      return;
+    }
+    
+    if (file.type !== "text/plain") {
+      errorMessage.innerHTML = "Only text files (.txt) are allowed. Please select a valid text file.";
+      return;
+    }
+    
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+      const content = e.target.result;
+      processFileContent(content, file.name);
+    };
+    
+    reader.onerror = function(e) {
+      errorMessage.innerHTML = "Error reading the file. Please try again or select a different file.";
+    };
+    
+    reader.readAsText(file);
+  });
+  
+  // Add the hidden input to the document and trigger file selection
+  document.body.appendChild(fileInput);
+  fileInput.click();
+  
+  // Clean up: remove the hidden input after use
+  fileInput.remove();
+}
+
+function processFileContent(content, fileName) {
+  try {
+    // Clear existing names
+    aNA = [];
+    nameDiv.innerHTML = "";
+    
+    // Process the file content
+    const lines = content.split(/\r?\n/);
+    const names = [];
+    
+    for (let line of lines) {
+      const name = line.trim();
+      if (name && !names.includes(name)) {
+        names.push(name);
+      }
+    }
+    
+    // Clear all separation dropdowns first
+    updateSelects();
+    for (let i = 0; i < selectS.length; i++) {
+      while (selectS[i].firstChild) {
+        selectS[i].removeChild(selectS[i].firstChild);
+      }
+    }
+    
+    // Add names to the simulator
+    for (let name of names) {
+      const newN = document.createElement("h2");
+      newN.innerHTML = name;
+      aNA.push(name);
+      newN.classList.add("nameC");
+      newN.numB = aNA.length;
+      newN.addEventListener("click", deleteName);
+      nameDiv.appendChild(newN);
+      
+      // Add to select options
+      updateSelects();
+      for (let i = 0; i < selectS.length; i++) {
+        const optionE = document.createElement("option");
+        optionE.innerHTML = name;
+        selectS[i].appendChild(optionE);
+      }
+    }
+    
+    // Display the file name
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    if (fileNameDisplay) {
+      fileNameDisplay.textContent = fileName;
+    }
+    
+    errorMessage.innerHTML = "";
+    updateNamesNum();
+    
+  } catch (error) {
+    errorMessage.innerHTML = "Error processing the file: " + error.message;
+  }
+}
+
+// Initialize the file name display when the page loads
+function initializeFileNameDisplay() {
+  const fileNameDisplay = document.getElementById('fileNameDisplay');
+  if (fileNameDisplay) {
+    fileNameDisplay.textContent = 'No File Uploaded';
+  }
+}
+
+// Call the initialization function when the page loads
+document.addEventListener('DOMContentLoaded', initializeFileNameDisplay);
