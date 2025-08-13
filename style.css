@@ -1,0 +1,323 @@
+.nameC {
+  display: block;
+  color: green;
+}
+
+.nameC:hover {
+  color: red;
+  cursor: pointer;
+}
+
+#nameDiv,
+#outputDiv {
+  border: 5px ridge black;
+  height: 400px;
+  width: 500px;
+  display: inline-block;
+  vertical-align: top;
+  overflow: auto;
+}
+
+#nh,
+#gh {
+  display: inline-block;
+  vertical-align: top;
+}
+
+#nameDiv {
+  background-color: lightpink;
+}
+
+#gh {
+  margin-left: 32.5%;
+  color: Dodgerblue;
+}
+
+#nh {
+  margin-left: 14%;
+}
+
+.smallO {
+  color: skyblue;
+  display: inline-block;
+  margin-right: 2px;
+}
+
+.smallO:hover {
+  color: crimson;
+  cursor: pointer;
+}
+
+.pepNames {
+  display: inline-block;
+  color: white;
+}
+
+.noPeople {
+  display: inline-block;
+  font-weight: bold;
+  color: rgb(204, 0, 0);
+}
+
+#outputDiv {
+  background-color: green;
+  display: inline-block;
+}
+
+body {
+  background-color: lightblue;
+  font-family: monospace;
+}
+
+.actionBtn {
+  background-color: black;
+  color: white;
+  border-radius: 150px;
+  border: 5px ridge white;
+  font-family: monospace;
+  margin-left: 2.5px;
+  cursor: pointer;
+}
+
+.actionBtn:hover {
+  color: blue;
+  background-color: lightgreen;
+  border: 5px ridge skyblue;
+}
+
+#nameInput {
+  color: yellow;
+  background-color: blue;
+  border-radius: 150px;
+  border: 5px ridge yellow;
+  font-family: monospace;
+}
+
+#groupInput {
+  color: blue;
+  background-color: yellow;
+  border-radius: 150px;
+  border: 5px ridge blue;
+  font-family: monospace;
+}
+
+#fileNameDisplay {
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  color: #333333;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+#clearB, #exportButton {
+  display: block;
+  margin-top: 5px;
+}
+
+#sepDiv,
+#dropFirst,
+#dropSecond,
+#dPutdiv,
+#sidePanel,
+.selectS,
+.inputDV {
+  display: inline-block;
+}
+
+#dPutdiv,
+.dropE {
+  color: chocolate;
+  margin-top: 5px;
+}
+
+#sepDiv {
+  color: crimson;
+  margin-left: 20px;
+}
+
+.inputDV {
+  color: crimson;
+  margin-left: 30px;
+}
+
+.checkS, .selectS {
+  cursor: pointer;
+}
+
+#errorMessage {
+  color: crimson;
+}
+
+#initial>div {
+  display: inline-block;
+}
+
+.instructions-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.instructions-overlay.show {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.instructions-panel {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  margin-top: 20px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.instructions-header {
+  background: linear-gradient(135deg, #32cd32 0%, #228b22 100%);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 15px 15px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.instructions-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ff6b6b;
+}
+
+.instructions-content {
+  padding: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.instruction-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.instruction-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.instruction-section h3 {
+  color: #8b4513;
+  font-size: 20px;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #daa520;
+  font-weight: 600;
+}
+
+.instruction-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.instruction-section li {
+  margin-bottom: 12px;
+  padding-left: 25px;
+  position: relative;
+  font-size: 16px;
+}
+
+.instruction-section li::before {
+  content: "▶";
+  position: absolute;
+  left: 0;
+  color: #32cd32;
+  font-size: 12px;
+  top: 2px;
+}
+
+.instruction-section li strong {
+  color: #8b4513;
+  font-weight: 600;
+}
+
+#viewInstructionsBtn {
+  display: inline-block;
+}
+
+#addPutButton, #checkAllInputs, #errorMessage {
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .instructions-panel {
+    width: 95%;
+    margin-top: 5px;
+  }
+  
+  .instructions-header {
+    padding: 15px 20px;
+  }
+  
+  .instructions-header h2 {
+    font-size: 20px;
+  }
+  
+  .instructions-content {
+    padding: 20px;
+  }
+  
+  .instruction-section h3 {
+    font-size: 18px;
+  }
+  
+  .instruction-section li {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Randomizing Groups Simulator</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- import the webpage's stylesheet -->
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- import the webpage's javascript file -->
+  <script src="/script.js" defer></script>
+</head>
+
+<body>
+  <h1 style="color: crimson">Randomizing Groups Simulator</h1>
+  <div id="initial">
+    <div>
+      <h2 style="color: green">Put in Names: <input id="nameInput" type="text" /><button id="submitB" class="actionBtn">Submit Name</button><button id="uploadButton" class="actionBtn">Upload Names</button><span id="fileNameDisplay">No File Uploaded</span>
+      </h2>
+      <h2 style="color: brown">Groups #: <input id="groupInput" min="1" type="number" /><button id="gSubmit" class="actionBtn">Submit # of Groups</button></h2>
+    </div>
+  </div>
+  <div>
+    <button id="addPutButton" class="actionBtn">
+      Add Another Separation
+    </button>
+    <button id="checkAllInputs" class="actionBtn">
+      Check All Separations
+    </button>
+    <h3 id="errorMessage"></h3>
+  </div>
+
+  <h2 id="puttingDiv">
+    <div class="dropE" id="dPutdiv"> Don't Put <select class="selectS" id="dropFirst"></select> with
+      <select class="selectS" id="dropSecond"></select> Please.
+      <div id="sepDiv">
+      Separate!<input id="pSubmit" type="checkbox" />
+      </div>
+    </div>
+  </h2>
+  <div>
+    <h2 id="nh" style="color: orange">
+      Names: 0
+    </h2>
+    <h2 id="gh" style="color: lightcoral">
+      Groups: 0
+    </h2>
+  </div>
+  <div style="display: inline-block">
+    <div id="nameDiv">
+
+    </div>
+    <div id="outputDiv">
+
+    </div>
+    <div style="display: inline-block">
+      <button id="viewInstructionsBtn" class="actionBtn">View Instructions</button>
+      <button id="exportButton" class="actionBtn">Export Groups</button>
+      <button id="clearB" class="actionBtn">Clear</button>
+    </div>
+  </div>
+
+  <!-- Instructions Panel Overlay -->
+  <div id="instructionsOverlay" class="instructions-overlay">
+    <div class="instructions-panel">
+      <div class="instructions-header">
+        <h2>How to Use the Randomizing Groups Simulator</h2>
+        <button id="closeInstructionsBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="instructions-content">
+        <div class="instruction-section">
+          <h3>Getting Started</h3>
+          <ul>
+            <li><strong>Add Names:</strong> Type a name in the "Put in Names" field and click "Submit Name" or press Enter</li>
+            <li><strong>Upload Names:</strong> Click "Upload Names" to upload a text file with names (one name per line)</li>
+            <li><strong>Set Groups:</strong> Enter the number of groups you want in the "Groups #" field</li>
+            <li><strong>Generate Groups:</strong> Click "Submit # of Groups" to randomize and create your groups</li>
+          </ul>
+        </div>
+        
+        <div class="instruction-section">
+          <h3>Advanced Features</h3>
+          <ul>
+            <li><strong>Separate People:</strong> Use the dropdown menus to select two people who shouldn't be in the same group, then check the "Separate!" checkbox</li>
+            <li><strong>Multiple Separations:</strong> Click "Add Another Separation" to create additional separation rules</li>
+            <li><strong>Manage Separations:</strong> Use "Check All Separations" to enable all separation rules at once</li>
+          </ul>
+        </div>
+        
+        <div class="instruction-section">
+          <h3>Managing Your Data</h3>
+          <ul>
+            <li><strong>Remove Names:</strong> Hover over any name in the Names box and click to remove it</li>
+            <li><strong>Remove Groups:</strong> Hover over any group title in the Groups box and click to remove that group</li>
+            <li><strong>Clear Everything:</strong> Click the "Clear" button to reset all data</li>
+          </ul>
+        </div>
+        
+        <div class="instruction-section">
+          <h3>Important Notes</h3>
+          <ul>
+            <li>You cannot add duplicate names to the list</li>
+            <li>Names cannot be blank</li>
+            <li>Separation constraints require at least 2 groups to work</li>
+            <li>The simulator will try to balance group sizes as evenly as possible</li>
+            <li>If separation constraints cannot be satisfied, you'll receive an error message with suggestions</li>
+          </ul>
+        </div>
+        
+        <div class="instruction-section">
+          <h3>Keyboard Shortcuts</h3>
+          <ul>
+            <li><strong>Enter:</strong> Submit a name (when name input is focused)</li>
+            <li><strong>Delete:</strong> Clear everything (same as Clear button)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
