@@ -1,5 +1,5 @@
 # Randomizing Groups Simulator: Constraint-Based Team Allocation
-
+### Live Demo: https://randomizing-groups-simulator.netlify.app/
 A fast, constraint-aware team generator for classes, events, and other team-building activities. Define participants and incompatibility rules; generate balanced groups with a randomized backtracking engine and instant, in-browser results.
 
 ## Features
