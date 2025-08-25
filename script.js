@@ -802,7 +802,7 @@ function calculateSolutionScore(groups, targetSizes) {
   return score;
 }
 
-// randomizing the names in the groups
+// Randomizing the names in the groups
 function shuffle() {
   if (aNA.length >= 1) {
     for (let i = 0; i < 100; i++) {
@@ -885,11 +885,15 @@ function processFileContent(content, fileName) {
     // Process the file content
     const lines = content.split(/\r?\n/);
     const names = [];
+
+    let moreThanOne = false;
     
     for (let line of lines) {
       const name = line.trim();
       if (name && !names.includes(name)) {
         names.push(name);
+      } else if (names.includes(name)) {
+        moreThanOne = true;
       }
     }
     
@@ -925,9 +929,12 @@ function processFileContent(content, fileName) {
     if (fileNameDisplay) {
       fileNameDisplay.textContent = fileName;
     }
-    
-    errorMessage.innerHTML = "";
+
     updateNamesNum();
+    errorMessage.innerHTML = "";
+    if (moreThanOne) {
+      errorMessage.innerHTML = "Unique names were only added once to the list.";
+    }
     
   } catch (error) {
     errorMessage.innerHTML = "Error processing the file: " + error.message;
@@ -941,8 +948,6 @@ function initializeFileNameDisplay() {
     fileNameDisplay.textContent = 'No File Uploaded';
   }
 }
-
-// Call the initialization function when the page loads
 document.addEventListener('DOMContentLoaded', initializeFileNameDisplay);
 
 // Instructions Panel Functions

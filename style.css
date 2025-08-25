@@ -1,3 +1,7 @@
+h1 {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .nameC {
   display: block;
   color: green;
@@ -18,8 +22,8 @@
   overflow: auto;
 }
 
-#nh,
-#gh {
+#names,
+#groups {
   display: inline-block;
   vertical-align: top;
 }
@@ -28,12 +32,12 @@
   background-color: lightpink;
 }
 
-#gh {
+#groups {
   margin-left: 32.5%;
-  color: Dodgerblue;
+  color: dodgerblue;
 }
 
-#nh {
+#names {
   margin-left: 14%;
 }
 
