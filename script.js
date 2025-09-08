@@ -986,7 +986,7 @@ function exportPrintedVersion() {
 
 function exportGroups() {
   errorMessage.innerHTML = "";
-  if (groupObject == {}) {
+  if (Object.keys(groupObject).length == 0) {
     exportError();
   } else {
     let result = exportPrintedVersion();
