@@ -6,7 +6,7 @@ const submitB = document.getElementById("submitB");
 const gSubmit = document.getElementById("gSubmit");
 const addPutButton = document.getElementById("addPutButton");
 const clearB = document.getElementById("clearB");
-const nh = document.getElementById("nh");
+const names = document.getElementById("names");
 const uploadButton = document.getElementById("uploadButton");
 const exportButton = document.getElementById("exportButton");
 let aNA = [];
@@ -15,7 +15,7 @@ let groupObject = {};
 const dropFirst = document.getElementById("dropFirst");
 const dropSecond = document.getElementById("dropSecond");
 const pSubmit = document.getElementById("pSubmit");
-const gh = document.getElementById("gh");
+const groups = document.getElementById("groups");
 let selectS = document.querySelectorAll(".selectS");
 let checkS = document.querySelectorAll(".checkS");
 let nameC = document.querySelectorAll(".nameC");
@@ -816,11 +816,11 @@ function shuffle() {
 }
 
 function updateGroupsNum() {
-  gh.innerHTML = "Groups: " + Object.keys(groupObject).length;
+  groups.innerHTML = "Groups: " + Object.keys(groupObject).length;
 }
 
 function updateNamesNum() {
-  nh.innerHTML = "Names: " + aNA.length;
+  names.innerHTML = "Names: " + aNA.length;
 }
 
 function updateChecks() {
