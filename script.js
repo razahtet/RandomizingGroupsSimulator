@@ -36,12 +36,12 @@ checkAllInputs.addEventListener("click", doTheCheck);
 uploadButton.addEventListener("click", handleFileUpload);
 viewInstructionsBtn.addEventListener("click", showInstructions);
 closeInstructionsBtn.addEventListener("click", hideInstructions);
+exportButton.addEventListener("click", exportGroups);
 instructionsOverlay.addEventListener("click", handleOverlayClick);
 pSubmit.classList.add("checkS");
 pSubmit.selectUno = dropFirst;
 pSubmit.selectDos = dropSecond;
 nameInput.focus();
-getReadyToExport("");
 
 function keyPressed(event) {
   if (event.keyCode == 13) {
@@ -164,7 +164,6 @@ function clearE() {
 }
 
 function makeGroups() {
-  getReadyToExport("");
   shuffle();
   groupObject = {};
   const rG = parseInt(groupInput.value, 10);
@@ -210,7 +209,6 @@ function makeGroups() {
 
 function printGroupsOut() {
   outputDiv.innerHTML = "";
-  let printedVersion = "";
   for (let grouP in groupObject) {
     const outsideBox = document.createElement("div");
     outputDiv.append(outsideBox);
@@ -218,7 +216,6 @@ function printGroupsOut() {
     // Group Part (e.g. Group 1:)
     const groupNameDiv = document.createElement("div");
     groupNameDiv.innerHTML = grouP + ":";
-    printedVersion = printedVersion + groupNameDiv.innerText + " ";
     groupNameDiv.nameG = grouP;
     groupNameDiv.classList.add("smallO");
     groupNameDiv.addEventListener("click", deleteGroup);
@@ -236,11 +233,8 @@ function printGroupsOut() {
       personDiv.classList.add("pepNames");
     }
     personDiv.innerHTML = personDiv.innerHTML.replace(/,\s*$/, "");
-    printedVersion = printedVersion + personDiv.innerText + "\n";
     outsideBox.append(personDiv);
   }
-  printedVersion = printedVersion.replace(/,\s*$/, "");
-  getReadyToExport(printedVersion);
   updateGroupsNum();
 }
 
@@ -316,7 +310,6 @@ function deleteName() {
     // Update the display
     printGroupsOut();
   }
-  
   updateNamesNum();
   updateGroupsNum();
 }
@@ -968,30 +961,46 @@ function handleOverlayClick(event) {
   }
 }
 
-// Exporting List of Groups Functions
+// Exporting Printed List of Groups Functions
 
-function getReadyToExport(endResult) {
-  errorMessage.innerHTML = "";
-  exportButton.removeEventListener("click", exportGroups);
-  exportButton.addEventListener("click", exportGroups);
+function exportPrintedVersion() {
+  let printedVersion = "";
+  for (let grouP in groupObject) {
+    // Group Part (e.g. Group 1:)
+    printedVersion = printedVersion + grouP + ":";
 
-  function exportGroups() {
-    errorMessage.innerHTML = "";
-    if (endResult == "" || groupObject == {}) {
-      exportError();
+    // The people in the group
+    const personDiv = document.createElement("div");
+    if (Object.keys(groupObject[grouP]).length == 0) {
+      printedVersion = printedVersion + "No people in this group";
     } else {
-      const groups = new Blob([endResult], { type: "text/plain" });
-      const link = document.createElement("a");
-
-      link.href = URL.createObjectURL(groups);
-      link.download = "groups.txt";
-      link.click();
-
-      URL.revokeObjectURL(link.href);
+      for (let perS in groupObject[grouP]) {
+        printedVersion = printedVersion + groupObject[grouP][perS] + ", ";
+      }
     }
+    printedVersion = printedVersion.replace(/,\s*$/, "");
+    printedVersion = printedVersion + "\n";
   }
+  return printedVersion.replace(/,\s*$/, "");
+}
 
-  function exportError() {
-    errorMessage.innerHTML = "Nothing to export yet. Please generate random groups first.";
+function exportGroups() {
+  errorMessage.innerHTML = "";
+  if (groupObject == {}) {
+    exportError();
+  } else {
+    let result = exportPrintedVersion();
+    const groups = new Blob([result], { type: "text/plain" });
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(groups);
+    link.download = "groups.txt";
+    link.click();
+
+    URL.revokeObjectURL(link.href);
   }
+}
+
+function exportError() {
+  errorMessage.innerHTML = "Nothing to export yet. Please generate random groups first.";
 }
